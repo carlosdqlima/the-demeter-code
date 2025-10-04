@@ -580,3 +580,29 @@ main {
         max-width: 80px;
     }
 }
+
+/* Estilos para seleção manual de localização */
+#select-location-btn.active {
+    background-color: var(--primary) !important;
+    color: var(--background-dark) !important;
+    box-shadow: 0 0 20px var(--primary);
+    animation: pulse-selection 2s infinite;
+}
+
+@keyframes pulse-selection {
+    0%, 100% {
+        box-shadow: 0 0 20px var(--primary);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--primary), 0 0 40px var(--primary);
+    }
+}
+
+/* Cursor personalizado para modo de seleção */
+#farm-map.selecting {
+    cursor: crosshair !important;
+}
+
+#farm-map.selecting * {
+    cursor: crosshair !important;
+}

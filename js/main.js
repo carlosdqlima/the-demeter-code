@@ -158,6 +158,12 @@ function initEventListeners() {
     
     // Redimensionamento do mapa
     window.addEventListener('resize', resizeFarmMap);
+    
+    // Botão de seleção manual de localização
+    const selectLocationBtn = document.getElementById('select-location-btn');
+    if (selectLocationBtn) {
+        selectLocationBtn.addEventListener('click', () => toggleLocationSelection());
+    }
 }
 
 /**
