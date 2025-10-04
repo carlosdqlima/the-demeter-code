@@ -487,6 +487,8 @@ function handleLocationChange(event) {
 let farmMap = null;
 let farmMarker = null;
 let farmPolygon = null;
+let isSelectingLocation = false; // Controla se está no modo de seleção
+let customLocation = null; // Armazena localização personalizada
 
 /**
  * Inicializa o mapa interativo da fazenda
@@ -552,18 +554,106 @@ function initFarmMap() {
 
         farmPolygon.bindPopup('Área cultivável da fazenda');
 
+        // Adiciona handler de clique para seleção manual
+        farmMap.on('click', handleMapClick);
+
         // Configura controles do mapa
         setupMapControls(osmLayer, satelliteLayer, terrainLayer);
 
-        // Remove indicador de carregamento
+        // Esconde indicador de carregamento
         hideMapLoading();
-
+        
         console.log('Mapa da fazenda inicializado com sucesso');
 
     } catch (error) {
         console.error('Erro ao inicializar mapa da fazenda:', error);
         showMapError();
     }
+}
+
+/**
+ * Manipula cliques no mapa para seleção manual da localização
+ */
+function handleMapClick(e) {
+    if (!isSelectingLocation) return;
+    
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+    
+    // Atualiza localização da fazenda
+    updateFarmLocation(lat, lng, 'Localização Personalizada', true);
+    
+    // Salva localização personalizada
+    customLocation = { lat, lng, name: 'Localização Personalizada' };
+    saveCustomLocation(customLocation);
+    
+    // Sai do modo de seleção
+    toggleLocationSelection(false);
+    
+    // Mostra notificação de confirmação
+    showNotification('📍 Localização da fazenda atualizada com sucesso!', 'success');
+    
+    console.log(`Nova localização selecionada: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+}
+
+/**
+ * Ativa/desativa modo de seleção de localização
+ */
+function toggleLocationSelection(enable = null) {
+    if (enable === null) {
+        isSelectingLocation = !isSelectingLocation;
+    } else {
+        isSelectingLocation = enable;
+    }
+    
+    const mapContainer = document.getElementById('farm-map');
+    const selectBtn = document.getElementById('select-location-btn');
+    
+    if (isSelectingLocation) {
+        // Ativa modo de seleção
+        mapContainer.style.cursor = 'crosshair';
+        if (selectBtn) {
+            selectBtn.textContent = '❌ Cancelar Seleção';
+            selectBtn.classList.add('active');
+        }
+        showNotification('🎯 Clique no mapa para selecionar a nova localização da fazenda', 'info');
+    } else {
+        // Desativa modo de seleção
+        mapContainer.style.cursor = '';
+        if (selectBtn) {
+            selectBtn.textContent = '📍 Selecionar Localização';
+            selectBtn.classList.remove('active');
+        }
+    }
+}
+
+/**
+ * Salva localização personalizada no localStorage
+ */
+function saveCustomLocation(location) {
+    try {
+        localStorage.setItem('farmCustomLocation', JSON.stringify(location));
+        console.log('Localização personalizada salva:', location);
+    } catch (error) {
+        console.error('Erro ao salvar localização personalizada:', error);
+    }
+}
+
+/**
+ * Carrega localização personalizada do localStorage
+ */
+function loadCustomLocation() {
+    try {
+        const saved = localStorage.getItem('farmCustomLocation');
+        if (saved) {
+            customLocation = JSON.parse(saved);
+            console.log('Localização personalizada carregada:', customLocation);
+            return customLocation;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar localização personalizada:', error);
+    }
+    return null;
 }
 
 /**
@@ -670,7 +760,7 @@ function resizeFarmMap() {
 /**
  * Atualiza a localização da fazenda no mapa
  */
-function updateFarmLocation(lat, lng, locationName) {
+function updateFarmLocation(lat, lng, locationName, isCustom = false) {
     if (!farmMap || !farmMarker) return;
 
     const newCoordinates = [lat, lng];
@@ -678,14 +768,23 @@ function updateFarmLocation(lat, lng, locationName) {
     // Atualiza posição do marcador
     farmMarker.setLatLng(newCoordinates);
     
-    // Atualiza popup do marcador
-    farmMarker.bindPopup(`
+    // Atualiza popup do marcador com informações diferentes para localização personalizada
+    const popupContent = isCustom ? `
+        <div style="text-align: center;">
+            <h4 style="margin: 0 0 10px 0; color: var(--azul-orbital);">🌾 Fazenda NASA Farm Navigators</h4>
+            <p style="margin: 0; font-size: 12px;">📍 ${locationName}</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px;">Coordenadas: ${lat.toFixed(6)}, ${lng.toFixed(6)}</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px;">Área: ~2.5 hectares</p>
+        </div>
+    ` : `
         <div style="text-align: center;">
             <h4 style="margin: 0 0 10px 0; color: var(--azul-orbital);">🌾 Fazenda NASA Farm Navigators</h4>
             <p style="margin: 0; font-size: 12px;">Localização: ${locationName}</p>
             <p style="margin: 5px 0 0 0; font-size: 12px;">Área: ~2.5 hectares</p>
         </div>
-    `);
+    `;
+    
+    farmMarker.bindPopup(popupContent);
     
     // Centraliza o mapa na nova localização
     farmMap.setView(newCoordinates, 16);
@@ -700,7 +799,14 @@ function updateFarmLocation(lat, lng, locationName) {
         farmPolygon.setBounds(newBounds);
     }
     
-    console.log(`Localização da fazenda atualizada para: ${locationName}`);
+    // Atualiza dados da NASA se for uma localização personalizada
+    if (isCustom && typeof updateNasaData === 'function') {
+        // Para localização personalizada, usa coordenadas como ID
+        const customLocationId = `custom_${lat.toFixed(4)}_${lng.toFixed(4)}`;
+        updateNasaData(customLocationId, { lat, lng });
+    }
+    
+    console.log(`Localização da fazenda atualizada para: ${locationName} (${lat.toFixed(6)}, ${lng.toFixed(6)})`);
 }
 
 // Inicializa o jogo quando o DOM estiver carregado
