@@ -1,0 +1,154 @@
+/* Estilos específicos para a seção da fazenda */
+
+.farm-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+}
+
+.farm-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 5px;
+    aspect-ratio: 1/1;
+    background-color: var(--marrom-fertil);
+    padding: 10px;
+    border-radius: var(--borda-arredondada);
+}
+
+.farm-plot {
+    background-color: #D2B48C; /* Cor de terra clara */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.farm-plot:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.farm-plot.selected {
+    border: 2px solid var(--azul-orbital);
+}
+
+/* Estados dos plots */
+.farm-plot.empty {
+    background-color: #D2B48C;
+}
+
+.farm-plot.planted {
+    background-color: #A0D6A0;
+}
+
+.farm-plot.growing {
+    background-color: var(--verde-safra);
+}
+
+.farm-plot.ready {
+    background-color: #FFDB58; /* Amarelo dourado para colheita */
+}
+
+.farm-plot.dry {
+    background-color: #E5C29F; /* Marrom mais claro para solo seco */
+}
+
+.farm-plot.irrigated {
+    position: relative;
+}
+
+.farm-plot.irrigated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, transparent 0%, transparent 45%, var(--azul-agua) 45%, var(--azul-agua) 55%, transparent 55%, transparent 100%);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.farm-plot.fertilized {
+    position: relative;
+}
+
+.farm-plot.fertilized::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, var(--verde-safra) 0%, transparent 60%);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Ícones de culturas */
+.crop-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    z-index: 2;
+}
+
+/* Controles da fazenda */
+.farm-controls {
+    background-color: var(--cinza-espacial);
+    padding: 15px;
+    border-radius: var(--borda-arredondada);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-group {
+    background-color: white;
+    padding: 10px;
+    border-radius: var(--borda-arredondada);
+}
+
+.control-group h4 {
+    margin-bottom: 10px;
+    color: var(--azul-orbital);
+}
+
+.seed-selection {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+.seed-btn {
+    padding: 5px;
+    font-size: 0.9rem;
+}
+
+.seed-btn.active {
+    background-color: var(--verde-safra);
+}
+
+/* Status da fazenda */
+.farm-status {
+    margin-top: 20px;
+    background-color: var(--cinza-espacial);
+    padding: 15px;
+    border-radius: var(--borda-arredondada);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .farm-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .farm-grid {
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+    }
+}
