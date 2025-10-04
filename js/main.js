@@ -158,40 +158,6 @@ function initEventListeners() {
     
     // Redimensionamento do mapa
     window.addEventListener('resize', resizeFarmMap);
-    
-    // Event listeners para seleção de regiões
-    initRegionSelectionListeners();
-}
-
-/**
- * Inicializa os event listeners para seleção de regiões
- */
-function initRegionSelectionListeners() {
-    // Event listeners para as opções de região
-    document.querySelectorAll('.region-option').forEach(option => {
-        option.addEventListener('click', (e) => {
-            const regionId = e.currentTarget.getAttribute('data-region');
-            selectRegionFromMap(regionId);
-        });
-    });
-
-    // Event listener para o botão de alterar região
-    const changeRegionBtn = document.getElementById('change-region-btn');
-    if (changeRegionBtn) {
-        changeRegionBtn.addEventListener('click', () => {
-            // Scroll para a seção de seleção de região
-            const regionSelector = document.getElementById('region-selector');
-            if (regionSelector) {
-                regionSelector.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Adiciona efeito visual temporário
-                regionSelector.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.5)';
-                setTimeout(() => {
-                    regionSelector.style.boxShadow = '';
-                }, 2000);
-            }
-        });
-    }
 }
 
 /**
@@ -521,51 +487,6 @@ function handleLocationChange(event) {
 let farmMap = null;
 let farmMarker = null;
 let farmPolygon = null;
-let regionMarkers = [];
-
-// Dados das regiões disponíveis
-const regionData = {
-    'brasilia': {
-        name: 'Brasília',
-        state: 'Distrito Federal',
-        coords: [-15.7942, -47.8822],
-        climate: 'Tropical de altitude',
-        suitability: 'Excelente',
-        suitabilityClass: 'suitability-excellent',
-        icon: '🏛️',
-        description: 'Capital federal com clima estável e boa infraestrutura'
-    },
-    'goiania': {
-        name: 'Goiânia',
-        state: 'Goiás',
-        coords: [-16.6869, -49.2648],
-        climate: 'Tropical semi-úmido',
-        suitability: 'Excelente',
-        suitabilityClass: 'suitability-excellent',
-        icon: '🌾',
-        description: 'Região agrícola tradicional com solo fértil'
-    },
-    'cuiaba': {
-        name: 'Cuiabá',
-        state: 'Mato Grosso',
-        coords: [-15.6014, -56.0979],
-        climate: 'Tropical quente',
-        suitability: 'Bom',
-        suitabilityClass: 'suitability-good',
-        icon: '🌿',
-        description: 'Portal de entrada do Pantanal com grande potencial agrícola'
-    },
-    'palmas': {
-        name: 'Palmas',
-        state: 'Tocantins',
-        coords: [-10.1689, -48.3317],
-        climate: 'Tropical com estação seca',
-        suitability: 'Bom',
-        suitabilityClass: 'suitability-good',
-        icon: '🌴',
-        description: 'Região de cerrado com crescimento do agronegócio'
-    }
-};
 
 /**
  * Inicializa o mapa interativo da fazenda
@@ -587,29 +508,52 @@ function initFarmMap() {
             attributionControl: true
         });
 
-        // Camadas do mapa
-        const mapLayers = {
-            osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap',
-                maxZoom: 19
-            }),
-            satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '© Esri',
-                maxZoom: 19
-            })
-        };
+        // Adiciona camada base (OpenStreetMap)
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        });
+
+        // Adiciona camada de satélite (Esri)
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '© Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+            maxZoom: 19
+        });
+
+        // Adiciona camada de terreno
+        const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenTopoMap contributors',
+            maxZoom: 17
+        });
 
         // Define camada padrão
-        mapLayers.osm.addTo(farmMap);
+        osmLayer.addTo(farmMap);
 
-        // Adiciona marcadores para todas as regiões disponíveis
-        addRegionMarkersToMap();
+        // Adiciona marcador da fazenda
+        farmMarker = L.marker(farmCoordinates, {
+            title: 'Fazenda NASA Farm Navigators'
+        }).addTo(farmMap);
 
-        // Define a região inicial (Brasília)
-        setActiveRegion('brasilia');
+        farmMarker.bindPopup(`
+            <div style="text-align: center;">
+                <h4 style="margin: 0 0 10px 0; color: var(--azul-orbital);">🌾 Fazenda NASA Farm Navigators</h4>
+                <p style="margin: 0; font-size: 12px;">Localização: Brasília, DF</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px;">Área: ~2.5 hectares</p>
+            </div>
+        `);
+
+        // Adiciona polígono da área da fazenda
+        farmPolygon = L.rectangle(farmBounds, {
+            color: '#2E8540',
+            weight: 2,
+            fillColor: '#2E8540',
+            fillOpacity: 0.2
+        }).addTo(farmMap);
+
+        farmPolygon.bindPopup('Área cultivável da fazenda');
 
         // Configura controles do mapa
-        setupMapControls(mapLayers);
+        setupMapControls(osmLayer, satelliteLayer, terrainLayer);
 
         // Remove indicador de carregamento
         hideMapLoading();
@@ -724,185 +668,39 @@ function resizeFarmMap() {
 }
 
 /**
- * Adiciona marcadores de todas as regiões disponíveis no mapa
- */
-function addRegionMarkersToMap() {
-    // Remove marcadores existentes
-    regionMarkers.forEach(marker => farmMap.removeLayer(marker));
-    regionMarkers = [];
-
-    // Adiciona marcador para cada região
-    Object.keys(regionData).forEach(regionId => {
-        const region = regionData[regionId];
-        const marker = L.marker(region.coords, {
-            icon: L.divIcon({
-                className: 'region-marker',
-                html: `<div class="region-marker-icon" data-region="${regionId}">
-                    <span class="region-emoji">${region.icon}</span>
-                    <div class="region-marker-pulse"></div>
-                </div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            })
-        }).addTo(farmMap);
-
-        marker.bindPopup(`
-            <div style="font-family: 'Inter', sans-serif; color: #1a1a1a; min-width: 200px;">
-                <h3 style="margin: 0 0 8px 0; color: #22c55e; font-size: 14px;">${region.icon} ${region.name}</h3>
-                <p style="margin: 0; font-size: 12px;"><strong>Estado:</strong> ${region.state}</p>
-                <p style="margin: 4px 0; font-size: 12px;"><strong>Clima:</strong> ${region.climate}</p>
-                <p style="margin: 4px 0; font-size: 12px;"><strong>Adequação:</strong> <span style="color: ${region.suitabilityClass === 'suitability-excellent' ? '#22c55e' : '#ffd700'};">${region.suitability}</span></p>
-                <p style="margin: 8px 0 4px 0; font-size: 11px; color: #666;">${region.description}</p>
-                <button onclick="selectRegionFromMap('${regionId}')" style="margin-top: 8px; padding: 6px 12px; background: #22c55e; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">
-                    Selecionar Esta Região
-                </button>
-            </div>
-        `);
-
-        // Adiciona evento de clique no marcador
-        marker.on('click', () => {
-            selectRegionFromMap(regionId);
-        });
-
-        regionMarkers.push(marker);
-    });
-}
-
-/**
- * Define a região ativa no mapa e na interface
- * @param {string} regionId - ID da região
- */
-function setActiveRegion(regionId) {
-    const region = regionData[regionId];
-    if (!region) return;
-
-    // Remove marcador e polígono da fazenda existentes
-    if (farmMarker) {
-        farmMap.removeLayer(farmMarker);
-    }
-    if (farmPolygon) {
-        farmMap.removeLayer(farmPolygon);
-    }
-
-    // Adiciona marcador da fazenda na nova região
-    farmMarker = L.marker(region.coords, {
-        icon: L.divIcon({
-            className: 'farm-marker active',
-            html: '<div style="background: #22c55e; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px rgba(34, 197, 94, 0.7); animation: pulse 2s infinite;"></div>',
-            iconSize: [22, 22],
-            iconAnchor: [11, 11]
-        })
-    }).addTo(farmMap);
-
-    farmMarker.bindPopup(`
-        <div style="font-family: 'Inter', sans-serif; color: #1a1a1a;">
-            <h3 style="margin: 0 0 8px 0; color: #22c55e; font-size: 14px;">🌱 Fazenda Sustentável</h3>
-            <p style="margin: 0; font-size: 12px;">Localização: ${region.name}, ${region.state}</p>
-            <p style="margin: 4px 0 0 0; font-size: 11px; color: #666;">Área cultivável: 2.5 hectares</p>
-        </div>
-    `);
-
-    // Adiciona polígono da área cultivável
-    const bounds = [
-        [region.coords[0] + 0.002, region.coords[1] + 0.002],
-        [region.coords[0] - 0.002, region.coords[1] - 0.002]
-    ];
-    
-    farmPolygon = L.polygon(bounds, {
-        color: '#22c55e',
-        fillColor: '#22c55e',
-        fillOpacity: 0.2,
-        weight: 2
-    }).addTo(farmMap);
-
-    // Centraliza o mapa na região
-    farmMap.setView(region.coords, 12);
-
-    // Atualiza interface visual
-    updateRegionInterface(regionId);
-    updateRegionInfoPanel(regionId);
-}
-
-/**
- * Atualiza a interface de seleção de regiões
- * @param {string} activeRegionId - ID da região ativa
- */
-function updateRegionInterface(activeRegionId) {
-    // Remove classe active de todas as opções
-    document.querySelectorAll('.region-option').forEach(option => {
-        option.classList.remove('active');
-    });
-
-    // Adiciona classe active à região selecionada
-    const activeOption = document.querySelector(`[data-region="${activeRegionId}"]`);
-    if (activeOption) {
-        activeOption.classList.add('active');
-    }
-
-    // Atualiza o select oculto para compatibilidade
-    const locationSelect = document.getElementById('location-select');
-    if (locationSelect) {
-        locationSelect.value = activeRegionId;
-    }
-}
-
-/**
- * Atualiza o painel de informações da região
- * @param {string} regionId - ID da região
- */
-function updateRegionInfoPanel(regionId) {
-    const region = regionData[regionId];
-    if (!region) return;
-
-    // Atualiza elementos do painel
-    const regionNameEl = document.getElementById('current-region-name');
-    const regionClimateEl = document.getElementById('current-region-climate');
-    const regionCoordsEl = document.getElementById('current-region-coords');
-    const regionSuitabilityEl = document.getElementById('current-region-suitability');
-
-    if (regionNameEl) regionNameEl.textContent = `${region.name}, ${region.state}`;
-    if (regionClimateEl) regionClimateEl.textContent = region.climate;
-    if (regionCoordsEl) regionCoordsEl.textContent = `${region.coords[0].toFixed(2)}°, ${region.coords[1].toFixed(2)}°`;
-    if (regionSuitabilityEl) {
-        regionSuitabilityEl.textContent = region.suitability;
-        regionSuitabilityEl.className = region.suitabilityClass;
-    }
-}
-
-/**
- * Seleciona uma região a partir do mapa
- * @param {string} regionId - ID da região
- */
-function selectRegionFromMap(regionId) {
-    setActiveRegion(regionId);
-    
-    // Dispara evento de mudança de localização para integração com NASA
-    const locationSelect = document.getElementById('location-select');
-    if (locationSelect) {
-        locationSelect.value = regionId;
-        const event = new Event('change', { bubbles: true });
-        locationSelect.dispatchEvent(event);
-    }
-    
-    showNotification(`Região alterada para ${regionData[regionId].name}`, 'info');
-}
-
-/**
- * Atualiza a localização da fazenda no mapa (função legada mantida para compatibilidade)
- * @param {number} lat - Latitude
- * @param {number} lng - Longitude
- * @param {string} locationName - Nome da localização
+ * Atualiza a localização da fazenda no mapa
  */
 function updateFarmLocation(lat, lng, locationName) {
-    // Encontra a região correspondente às coordenadas
-    const regionId = Object.keys(regionData).find(id => {
-        const region = regionData[id];
-        return Math.abs(region.coords[0] - lat) < 0.1 && Math.abs(region.coords[1] - lng) < 0.1;
-    });
+    if (!farmMap || !farmMarker) return;
 
-    if (regionId) {
-        setActiveRegion(regionId);
+    const newCoordinates = [lat, lng];
+    
+    // Atualiza posição do marcador
+    farmMarker.setLatLng(newCoordinates);
+    
+    // Atualiza popup do marcador
+    farmMarker.bindPopup(`
+        <div style="text-align: center;">
+            <h4 style="margin: 0 0 10px 0; color: var(--azul-orbital);">🌾 Fazenda NASA Farm Navigators</h4>
+            <p style="margin: 0; font-size: 12px;">Localização: ${locationName}</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px;">Área: ~2.5 hectares</p>
+        </div>
+    `);
+    
+    // Centraliza o mapa na nova localização
+    farmMap.setView(newCoordinates, 16);
+    
+    // Atualiza polígono da fazenda
+    if (farmPolygon) {
+        const offset = 0.002;
+        const newBounds = [
+            [lat - offset, lng - offset],
+            [lat + offset, lng + offset]
+        ];
+        farmPolygon.setBounds(newBounds);
     }
+    
+    console.log(`Localização da fazenda atualizada para: ${locationName}`);
 }
 
 // Inicializa o jogo quando o DOM estiver carregado

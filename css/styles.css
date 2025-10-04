@@ -467,90 +467,46 @@ main {
 
 .map-controls {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 10px;
+    right: 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
     z-index: 1000;
 }
 
 .map-control-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: rgba(var(--panel-dark-rgb), 0.9);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(var(--primary-rgb), 0.3);
-    border-radius: 8px;
-    font-size: 16px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
-    color: var(--primary);
 }
 
 .map-control-btn:hover {
-    background: rgba(var(--primary-rgb), 0.2);
-    border-color: var(--primary);
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+    background-color: var(--azul-orbital);
+    color: white;
 }
 
 .map-control-btn.active {
-    background: var(--primary);
-    color: var(--background-dark);
-    border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.5);
+    background-color: var(--verde-safra);
+    color: white;
 }
 
-/* Indicador da área da fazenda */
 .farm-area-indicator {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(var(--panel-dark-rgb), 0.9);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(var(--vibrant-green-rgb), 0.3);
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 4px 20px rgba(var(--vibrant-green-rgb), 0.2);
-    z-index: 1000;
-    min-width: 200px;
-}
-
-.farm-indicator-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.farm-indicator-dot {
-    width: 12px;
-    height: 12px;
-    background: var(--vibrant-green);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(var(--vibrant-green-rgb), 0.5);
-}
-
-.farm-indicator-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--vibrant-green);
-}
-
-.farm-indicator-details {
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: var(--borda-arredondada);
     font-size: 12px;
-    color: rgba(var(--text-dark-rgb), 0.8);
-    line-height: 1.4;
-}
-
-.farm-detail-value {
-    color: var(--primary);
-    font-weight: 500;
+    color: var(--grafite-escuro);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
 }
 
 .farm-area-indicator .area-icon {
@@ -622,264 +578,5 @@ main {
     .map-control-btn {
         flex: 1;
         max-width: 80px;
-    }
-}
-
-/* Seletor visual de regiões */
-.region-selector-container {
-    position: relative;
-}
-
-.region-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.region-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
-    background: var(--panel-dark);
-    border: 1px solid rgba(var(--primary-rgb), 0.3);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.region-option:hover {
-    background: rgba(var(--primary-rgb), 0.1);
-    border-color: var(--primary);
-    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.2);
-}
-
-.region-option.active {
-    background: rgba(var(--primary-rgb), 0.2);
-    border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
-}
-
-.region-option.active::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 8px;
-    height: 8px;
-    background: var(--vibrant-green);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--vibrant-green);
-}
-
-.region-icon {
-    font-size: 20px;
-    min-width: 24px;
-    text-align: center;
-}
-
-.region-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.region-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--primary);
-    line-height: 1.2;
-}
-
-.region-state {
-    font-size: 10px;
-    color: var(--text-dark);
-    opacity: 0.8;
-    line-height: 1.2;
-}
-
-.region-climate {
-    font-size: 9px;
-    color: var(--text-dark);
-    opacity: 0.6;
-    line-height: 1.2;
-    margin-top: 2px;
-}
-
-/* Painel de informações da região no mapa */
-.region-info-panel {
-    background: rgba(var(--panel-dark-rgb), 0.95);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(var(--primary-rgb), 0.3);
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
-    min-width: 200px;
-}
-
-.region-info-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
-}
-
-.region-info-content {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 8px;
-}
-
-.region-detail {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-}
-
-.detail-label {
-    color: var(--text-dark);
-    opacity: 0.8;
-}
-
-.suitability-excellent {
-    color: var(--vibrant-green) !important;
-}
-
-.suitability-good {
-    color: #ffd700 !important;
-}
-
-.suitability-fair {
-    color: #ff8c00 !important;
-}
-
-.change-region-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 6px 8px;
-    background: rgba(var(--panel-dark-rgb), 0.5);
-    border: 1px solid rgba(var(--primary-rgb), 0.3);
-    border-radius: 4px;
-    color: var(--primary);
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.change-region-btn:hover {
-    background: rgba(var(--primary-rgb), 0.2);
-    box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.2);
-}
-
-/* Marcadores das regiões no mapa */
-.region-marker-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background: rgba(var(--panel-dark-rgb), 0.9);
-    border: 2px solid var(--primary);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(4px);
-}
-
-.region-marker-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.5);
-}
-
-.region-emoji {
-    font-size: 16px;
-    z-index: 2;
-}
-
-.region-marker-pulse {
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border: 2px solid var(--primary);
-    border-radius: 50%;
-    animation: pulse-ring 2s infinite;
-    opacity: 0.6;
-}
-
-@keyframes pulse-ring {
-    0% {
-        transform: scale(1);
-        opacity: 0.6;
-    }
-    50% {
-        transform: scale(1.3);
-        opacity: 0.3;
-    }
-    100% {
-        transform: scale(1.6);
-        opacity: 0;
-    }
-}
-
-/* Animação para o marcador da fazenda ativa */
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(34, 197, 94, 0.9);
-    }
-    100% {
-        box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
-    }
-}
-
-/* Estilos para o painel de informações da região no mapa */
-.region-location-icon {
-    font-size: 14px;
-}
-
-.region-name-display {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--primary);
-}
-
-.change-region-icon {
-    font-size: 12px;
-}
-
-/* Responsividade adicional para seletor de regiões */
-@media (max-width: 768px) {
-    .region-selector {
-        grid-template-columns: 1fr;
-    }
-    
-    .region-info-panel {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        margin-top: 10px;
-        min-width: auto;
-    }
-    
-    .region-marker-icon {
-        width: 25px;
-        height: 25px;
-    }
-    
-    .region-emoji {
-        font-size: 14px;
     }
 }

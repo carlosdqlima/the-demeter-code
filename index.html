@@ -132,48 +132,28 @@
                             </div>
                             
                             <!-- Map Controls Overlay -->
-                            <div class="map-controls">
-                                <button id="map-toggle" class="map-control-btn" data-layer="toggle" title="Alternar Vista">
-                                    🛰️
+                            <div class="absolute top-4 right-4 flex flex-col gap-2 z-20">
+                                <button id="map-satellite" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10">
+                                    <span class="material-symbols-outlined text-sm">satellite</span>
+                                </button>
+                                <button id="map-terrain" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10">
+                                    <span class="material-symbols-outlined text-sm">terrain</span>
+                                </button>
+                                <button id="map-layers" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10">
+                                    <span class="material-symbols-outlined text-sm">layers</span>
                                 </button>
                             </div>
                             
                             <!-- Farm Area Indicator -->
-                            <div class="farm-area-indicator">
-                                <div class="farm-indicator-header">
-                                    <div class="farm-indicator-dot"></div>
-                                    <span class="farm-indicator-title">Área Cultivável</span>
+                            <div class="absolute bottom-4 left-4 bg-panel-dark/90 backdrop-blur-sm border border-vibrant-green/30 rounded-lg p-3 shadow-glow shadow-vibrant-green/20 z-20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-3 h-3 bg-vibrant-green rounded-full shadow-glow shadow-vibrant-green/50"></div>
+                                    <span class="text-sm font-medium text-vibrant-green">Área Cultivável</span>
                                 </div>
-                                <div class="farm-indicator-details">
-                                    <div>Área: <span class="farm-detail-value">25 hectares</span></div>
-                                    <div>Coordenadas: <span class="farm-detail-value" id="farm-coordinates">-15.7801, -47.9292</span></div>
+                                <div class="text-xs text-text-dark/80">
+                                    <div>Área: <span class="text-primary font-medium">25 hectares</span></div>
+                                    <div>Coordenadas: <span class="text-primary font-medium" id="farm-coordinates">-15.7801, -47.9292</span></div>
                                 </div>
-                            </div>
-                            
-                            <!-- Region Info Panel -->
-                            <div id="region-info-panel" class="region-info-panel">
-                                <div class="region-info-header">
-                                    <span class="region-location-icon">📍</span>
-                                    <span id="current-region-name" class="region-name-display">Brasília, DF</span>
-                                </div>
-                                <div class="region-info-content">
-                                    <div class="region-detail">
-                                        <span class="detail-label">Clima:</span>
-                                        <span id="current-region-climate" class="detail-value">Tropical de altitude</span>
-                                    </div>
-                                    <div class="region-detail">
-                                        <span class="detail-label">Coordenadas:</span>
-                                        <span id="current-region-coords" class="detail-value">-15.79°, -47.88°</span>
-                                    </div>
-                                    <div class="region-detail">
-                                        <span class="detail-label">Adequação:</span>
-                                        <span id="current-region-suitability" class="suitability-excellent">Excelente</span>
-                                    </div>
-                                </div>
-                                <button id="change-region-btn" class="change-region-btn">
-                                    <span class="change-region-icon">🔄</span>
-                                    Alterar Região
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -313,52 +293,13 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm text-text-dark mb-2">Localização da Fazenda</label>
-                                <div class="region-selector-container">
-                                    <!-- Seletor visual de regiões -->
-                                    <div id="region-selector" class="region-selector">
-                                        <div class="region-option active" data-region="brasilia" data-coords="-15.7942,-47.8822">
-                                            <div class="region-icon">🏛️</div>
-                                            <div class="region-info">
-                                                <div class="region-name">Brasília</div>
-                                                <div class="region-state">Distrito Federal</div>
-                                                <div class="region-climate">Tropical de altitude</div>
-                                            </div>
-                                        </div>
-                                        <div class="region-option" data-region="goiania" data-coords="-16.6869,-49.2648">
-                                            <div class="region-icon">🌾</div>
-                                            <div class="region-info">
-                                                <div class="region-name">Goiânia</div>
-                                                <div class="region-state">Goiás</div>
-                                                <div class="region-climate">Tropical semi-úmido</div>
-                                            </div>
-                                        </div>
-                                        <div class="region-option" data-region="cuiaba" data-coords="-15.6014,-56.0979">
-                                            <div class="region-icon">🌿</div>
-                                            <div class="region-info">
-                                                <div class="region-name">Cuiabá</div>
-                                                <div class="region-state">Mato Grosso</div>
-                                                <div class="region-climate">Tropical quente</div>
-                                            </div>
-                                        </div>
-                                        <div class="region-option" data-region="palmas" data-coords="-10.1689,-48.3317">
-                                            <div class="region-icon">🌴</div>
-                                            <div class="region-info">
-                                                <div class="region-name">Palmas</div>
-                                                <div class="region-state">Tocantins</div>
-                                                <div class="region-climate">Tropical com estação seca</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Dropdown tradicional (oculto, para compatibilidade) -->
-                                    <select id="location-select" class="hidden">
-                                        <option value="brasilia">Brasília, DF</option>
-                                        <option value="goiania">Goiânia, GO</option>
-                                        <option value="cuiaba">Cuiabá, MT</option>
-                                        <option value="palmas">Palmas, TO</option>
-                                    </select>
-                                </div>
+                                <label class="block text-sm text-text-dark mb-2">Localização</label>
+                                <select id="location-select" class="w-full bg-background-dark border border-primary/30 rounded-md px-3 py-2 text-text-dark focus:border-primary focus:ring-1 focus:ring-primary">
+                                    <option value="brasilia">Brasília, DF</option>
+                                    <option value="goiania">Goiânia, GO</option>
+                                    <option value="cuiaba">Cuiabá, MT</option>
+                                    <option value="palmas">Palmas, TO</option>
+                                </select>
                             </div>
                             <div class="flex items-end">
                                 <button id="update-data" class="w-full bg-primary/20 border border-primary text-primary rounded-md px-4 py-2 hover:bg-primary/30 transition-all duration-200 shadow-glow shadow-primary/20">
