@@ -569,6 +569,12 @@ function initFarmMap() {
         // Esconde indicador de carregamento
         hideMapLoading();
         
+        // Carrega localização personalizada se existir
+        const savedLocation = loadCustomLocation();
+        if (savedLocation) {
+            updateFarmLocation(savedLocation.lat, savedLocation.lng, savedLocation.name, true);
+        }
+        
         console.log('Mapa da fazenda inicializado com sucesso');
 
     } catch (error) {
@@ -617,18 +623,18 @@ function toggleLocationSelection(enable = null) {
     
     if (isSelectingLocation) {
         // Ativa modo de seleção
-        mapContainer.style.cursor = 'crosshair';
+        mapContainer.classList.add('selecting');
         if (selectBtn) {
-            selectBtn.textContent = '❌ Cancelar Seleção';
             selectBtn.classList.add('active');
+            selectBtn.title = 'Cancelar seleção';
         }
         showNotification('🎯 Clique no mapa para selecionar a nova localização da fazenda', 'info');
     } else {
         // Desativa modo de seleção
-        mapContainer.style.cursor = '';
+        mapContainer.classList.remove('selecting');
         if (selectBtn) {
-            selectBtn.textContent = '📍 Selecionar Localização';
             selectBtn.classList.remove('active');
+            selectBtn.title = 'Selecionar localização manualmente';
         }
     }
 }
