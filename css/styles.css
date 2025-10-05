@@ -169,17 +169,7 @@ main {
     color: white;
 }
 
-.data-dashboard {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-}
 
-@media (min-width: 992px) {
-    .data-dashboard {
-        grid-template-columns: 1fr 1fr;
-    }
-}
 
 .map-container {
     position: relative;
@@ -397,19 +387,24 @@ main {
     border-radius: var(--borda-arredondada);
 }
 
-/* Estilos do Mapa da Fazenda */
+/* Farm Map Section - Fixed Dimensions */
 .farm-map-section {
-    background-color: white;
-    border-radius: var(--borda-arredondada);
-    box-shadow: var(--sombra-padrao);
-    margin-bottom: 20px;
+    position: relative;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
 }
 
 .farm-map-header {
-    background: linear-gradient(135deg, var(--verde-safra), var(--azul-orbital));
+    background: rgba(26, 26, 26, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 255, 157, 0.3);
+    border-radius: 8px 8px 0 0;
+    padding: 1rem;
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+    height: 80px; /* Altura fixa para o cabeçalho */
+    flex-shrink: 0;
     color: white;
-    padding: 15px 20px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -422,29 +417,44 @@ main {
 }
 
 .farm-map-container {
-    position: relative;
-    height: 400px;
-    background-color: var(--cinza-espacial);
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100vw - 400px); /* Reserva espaço para a sidebar direita */
+    max-height: calc(100vh - 120px); /* Altura fixa considerando header e padding */
 }
 
 #farm-map {
     width: 100%;
-    height: 100%;
-    border: none;
+    height: calc(100% - 80px); /* Altura fixa subtraindo o header */
+    min-height: 500px; /* Altura mínima garantida */
+    max-height: 700px; /* Altura máxima para manter controle */
+    border: 1px solid rgba(0, 255, 157, 0.3);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+    position: relative;
     outline: none;
 }
 
 .map-loading {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 26, 26, 0.9);
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    z-index: 10;
+    flex-direction: column;
     gap: 10px;
     color: var(--grafite-escuro);
-    z-index: 1000;
 }
 
 .map-loading.hidden {
@@ -465,56 +475,52 @@ main {
     100% { transform: rotate(360deg); }
 }
 
-.map-controls {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    z-index: 1000;
-}
-
+/* Map Controls - Agora no cabeçalho */
 .map-control-btn {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: rgba(26, 26, 26, 0.5);
+    border: 1px solid rgba(0, 255, 157, 0.3);
+    color: #00ff9d;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px rgba(0, 255, 157, 0.1);
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 .map-control-btn:hover {
-    background-color: var(--azul-orbital);
-    color: white;
+    background: rgba(0, 255, 157, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+    transform: translateY(-1px);
 }
 
 .map-control-btn.active {
-    background-color: var(--verde-safra);
-    color: white;
+    background: rgba(0, 255, 157, 0.2);
+    color: #00ff9d;
 }
 
-.farm-area-indicator {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 8px 12px;
-    border-radius: var(--borda-arredondada);
-    font-size: 12px;
-    color: var(--grafite-escuro);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 1000;
-}
 
-.farm-area-indicator .area-icon {
-    color: var(--verde-safra);
-    margin-right: 5px;
-}
 
 /* Responsividade */
+/* Responsividade para o Mapa da Fazenda */
+@media (max-width: 1200px) {
+    .farm-map-container {
+        max-width: calc(100vw - 320px); /* Ajuste para sidebar menor */
+    }
+    
+    #farm-map {
+        min-height: 450px;
+        max-height: 600px;
+    }
+    
+
+}
+
 @media (max-width: 768px) {
     header {
         flex-direction: column;
@@ -531,78 +537,1494 @@ main {
     }
     
     .farm-map-container {
-        height: 300px;
+        top: 0.5rem;
+        left: 0.5rem;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        max-width: calc(100vw - 1rem);
+        max-height: calc(100vh - 80px);
     }
     
     .farm-map-header {
-        padding: 12px 15px;
+        height: 60px;
+        padding: 0.75rem;
     }
     
     .farm-map-header h3 {
         font-size: 1.1em;
     }
     
-    .map-controls {
-        top: 5px;
-        right: 5px;
-        gap: 3px;
+    #farm-map {
+        height: calc(100% - 60px);
+        min-height: 350px;
+        max-height: 500px;
     }
     
-    .map-control-btn {
-        padding: 6px 10px;
-        font-size: 11px;
-    }
-    
-    .farm-area-indicator {
-        bottom: 5px;
-        left: 5px;
-        padding: 6px 10px;
-        font-size: 11px;
-    }
+
+
 }
 
 @media (max-width: 480px) {
     .farm-map-container {
-        height: 250px;
+        top: 0.25rem;
+        left: 0.25rem;
+        right: 0.25rem;
+        bottom: 0.25rem;
+        max-width: calc(100vw - 0.5rem);
     }
     
-    .map-controls {
-        flex-direction: row;
-        top: auto;
-        bottom: 50px;
-        right: 5px;
-        left: 5px;
-        justify-content: center;
+    .farm-map-header {
+        height: 50px;
+        padding: 0.5rem;
+    }
+    
+    #farm-map {
+        height: calc(100% - 50px);
+        min-height: 300px;
+        max-height: 400px;
+    }
+    
+
+
+}
+
+/* Ajustes para telas muito grandes */
+@media (min-width: 1920px) {
+    .farm-map-container {
+        max-width: calc(100vw - 500px);
+        max-height: calc(100vh - 140px);
+    }
+    
+    #farm-map {
+        min-height: 600px;
+        max-height: 800px;
+    }
+    
+
+}
+
+/* Controles de Localização na Barra Direita */
+.location-controls {
+    transition: all 0.3s ease;
+}
+
+.location-controls select {
+    transition: all 0.2s ease;
+}
+
+.location-controls select:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
+}
+
+.location-controls button {
+    transition: all 0.2s ease;
+}
+
+.location-controls button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4);
+}
+
+.location-controls button:active {
+    transform: translateY(0);
+}
+
+/* Responsividade para controles de localização */
+@media (max-width: 768px) {
+    .location-controls select {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .location-controls button {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}
+
+/* Responsividade para controles do mapa no cabeçalho */
+@media (max-width: 768px) {
+    .farm-map-header .flex.items-center.gap-2:last-child {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+    
+    .farm-map-header .flex.items-center.gap-1 {
+        gap: 0.25rem;
     }
     
     .map-control-btn {
-        flex: 1;
-        max-width: 80px;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
     }
 }
 
-/* Estilos para seleção manual de localização */
-#select-location-btn.active {
-    background-color: var(--primary) !important;
-    color: var(--background-dark) !important;
-    box-shadow: 0 0 20px var(--primary);
-    animation: pulse-selection 2s infinite;
+@media (max-width: 480px) {
+    .farm-map-header .flex.items-center.gap-2:last-child {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+    }
+    
+    .map-control-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+    
+    .farm-map-header h2 {
+        font-size: 1rem;
+    }
+    
+    .farm-map-header p {
+        font-size: 0.75rem;
+    }
 }
 
-@keyframes pulse-selection {
-    0%, 100% {
-        box-shadow: 0 0 20px var(--primary);
+/* ===== DRAG AND DROP DE AÇÕES ===== */
+
+/* Estilos para botões durante drag */
+[data-action] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-action]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+}
+
+[data-action].dragging {
+    opacity: 0.7;
+    transform: scale(0.95) rotate(2deg);
+    box-shadow: 0 12px 35px rgba(255, 107, 53, 0.5);
+    border-color: #FF6B35;
+    position: relative;
+    z-index: 1000;
+    transition: all 0.2s ease;
+}
+
+[data-action].dragging::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.3), transparent);
+    border-radius: inherit;
+    z-index: -1;
+    animation: borderGlow 1.5s ease-in-out infinite;
+}
+
+/* Cursor para elementos arrastáveis */
+[data-action] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-action]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+[data-action]:hover::before {
+    left: 100%;
+}
+
+/* Zona de drop ativa no mapa */
+#farm-map {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+#farm-map.drop-zone-active {
+    position: relative;
+    border: 3px dashed #FF6B35;
+    border-radius: 12px;
+    background: linear-gradient(45deg, 
+        rgba(255, 107, 53, 0.1) 25%, 
+        transparent 25%, 
+        transparent 75%, 
+        rgba(255, 107, 53, 0.1) 75%
+    );
+    background-size: 30px 30px;
+    animation: dropZonePulse 2s ease-in-out infinite;
+    transform: scale(1.02);
+    box-shadow: 
+        inset 0 0 50px rgba(255, 107, 53, 0.1),
+        0 0 30px rgba(255, 107, 53, 0.2),
+        0 0 30px rgba(255, 107, 53, 0.3);
+}
+
+#farm-map.drop-zone-active::before {
+    content: "🎯 Solte aqui para executar a ação";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8));
+    color: #FF6B35;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 107, 53, 0.3);
+    border: 2px solid #FF6B35;
+    backdrop-filter: blur(10px);
+    animation: dropHintFadeIn 0.5s ease-out forwards, dropHintFloat 2s ease-in-out infinite 0.5s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+/* Estado de drag over */
+#farm-map.drag-over {
+    border-color: #4CAF50;
+    background: linear-gradient(45deg, 
+        rgba(76, 175, 80, 0.2) 25%, 
+        transparent 25%, 
+        transparent 75%, 
+        rgba(76, 175, 80, 0.2) 75%
+    );
+    animation: dropZoneActive 1s ease-in-out infinite;
+    box-shadow: 
+        inset 0 0 50px rgba(76, 175, 80, 0.2),
+        0 0 40px rgba(76, 175, 80, 0.4);
+}
+
+#farm-map.drag-over::before {
+    content: "✨ Solte agora!";
+    color: #4CAF50;
+    border-color: #4CAF50;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85));
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(76, 175, 80, 0.5);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* Melhorias no tooltip */
+.drag-tooltip {
+    position: fixed;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.85));
+    color: #FF6B35;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10000;
+    pointer-events: none;
+    border: 1px solid #FF6B35;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(255, 107, 53, 0.3);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+    transform-origin: bottom left;
+}
+
+/* Efeitos de partículas */
+.particle {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+/* Marcadores de ação aprimorados no mapa */
+.enhanced-action-marker {
+    position: absolute;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.enhanced-marker-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ondas de energia ao redor do marcador */
+.marker-energy-waves {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.energy-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: energyWaveExpand 2s ease-out infinite;
+}
+
+.wave-1 {
+    width: 40px;
+    height: 40px;
+    animation-delay: 0s;
+}
+
+.wave-2 {
+    width: 50px;
+    height: 50px;
+    animation-delay: 0.7s;
+}
+
+.wave-3 {
+    width: 60px;
+    height: 60px;
+    animation-delay: 1.4s;
+}
+
+/* Marcador principal */
+.enhanced-marker-content {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 3px solid;
+    overflow: hidden;
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(255, 255, 255, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 2;
+}
+
+/* Brilho interno */
+.marker-inner-glow {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* Container do ícone principal */
+.marker-icon-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marker-main-icon {
+    font-size: 20px;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+/* Emoji decorativo */
+.marker-emoji {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 16px;
+    z-index: 4;
+    animation: emojiFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Partículas flutuantes */
+.marker-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.marker-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    opacity: 0.8;
+    box-shadow: 0 0 6px currentColor;
+}
+
+.particle-1 { top: 10%; left: 20%; animation: markerParticleFloat1 2.5s ease-in-out infinite; }
+.particle-2 { top: 20%; right: 15%; animation: markerParticleFloat2 3s ease-in-out infinite; }
+.particle-3 { bottom: 25%; left: 10%; animation: markerParticleFloat3 2.8s ease-in-out infinite; }
+.particle-4 { bottom: 15%; right: 20%; animation: markerParticleFloat1 3.2s ease-in-out infinite; }
+.particle-5 { top: 50%; left: 5%; animation: markerParticleFloat2 2.7s ease-in-out infinite; }
+.particle-6 { top: 40%; right: 8%; animation: markerParticleFloat3 3.1s ease-in-out infinite; }
+
+/* Sombra projetada */
+.marker-shadow {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 8px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* Animações de entrada e saída */
+.marker-entrance-animation {
+    animation: markerEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.marker-exit-animation {
+    animation: markerExit 0.5s ease-in forwards;
+}
+
+/* Estilos para popups aprimorados */
+.enhanced-popup-container .leaflet-popup-content-wrapper {
+    background: transparent;
+    border-radius: 12px;
+    box-shadow: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+.enhanced-popup-container .leaflet-popup-tip {
+    background: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.enhanced-popup {
+    background: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    min-width: 260px;
+}
+
+.popup-header {
+    padding: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popup-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: popupShine 3s linear infinite;
+}
+
+.popup-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.popup-emoji {
+    font-size: 24px;
+    animation: emojiFloat 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.popup-content {
+    padding: 16px;
+    color: white;
+}
+
+.popup-title {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.popup-description {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+}
+
+.popup-coordinates,
+.popup-timestamp {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 6px;
+}
+
+.popup-coordinates .material-symbols-outlined,
+.popup-timestamp .material-symbols-outlined {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Animação para brilho do popup */
+@keyframes popupShine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Animação para fade in do hint de drop */
+@keyframes dropHintFadeIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Responsividade para popups */
+@media (max-width: 768px) {
+    .enhanced-popup {
+        min-width: 220px;
+    }
+    
+    .popup-header {
+        padding: 12px;
+    }
+    
+    .popup-content {
+        padding: 12px;
+    }
+    
+    .popup-title {
+        font-size: 14px;
+    }
+    
+    .popup-description {
+        font-size: 12px;
+    }
+    
+    .popup-coordinates,
+    .popup-timestamp {
+        font-size: 11px;
+    }
+}
+
+/* Cores específicas para marcadores */
+.action-marker[data-action="plant"] .action-marker-content {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+    border-color: #4CAF50;
+}
+
+.action-marker[data-action="irrigate"] .action-marker-content {
+    background: linear-gradient(135deg, #2196F3, #42A5F5);
+    border-color: #2196F3;
+}
+
+.action-marker[data-action="harvest"] .action-marker-content {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+    border-color: #FF9800;
+}
+
+.action-marker[data-action="upgrade"] .action-marker-content {
+    background: linear-gradient(135deg, #9C27B0, #BA68C8);
+    border-color: #9C27B0;
+}
+
+/* Animações */
+@keyframes dropZonePulse {
+    0% {
+        border-color: #FF6B35;
+        box-shadow: 
+            inset 0 0 50px rgba(255, 107, 53, 0.1),
+            0 0 30px rgba(255, 107, 53, 0.2);
+        transform: scale(1.02);
     }
     50% {
-        box-shadow: 0 0 30px var(--primary), 0 0 40px var(--primary);
+        border-color: #FF8A65;
+        box-shadow: 
+            inset 0 0 50px rgba(255, 107, 53, 0.2),
+            0 0 40px rgba(255, 107, 53, 0.4);
+        transform: scale(1.03);
+    }
+    100% {
+        border-color: #FF6B35;
+        box-shadow: 
+            inset 0 0 50px rgba(255, 107, 53, 0.1),
+            0 0 30px rgba(255, 107, 53, 0.2);
+        transform: scale(1.02);
     }
 }
 
-/* Cursor personalizado para modo de seleção */
-#farm-map.selecting {
+@keyframes dropZoneActive {
+    0% {
+        border-color: #4CAF50;
+        box-shadow: 
+            inset 0 0 50px rgba(76, 175, 80, 0.2),
+            0 0 40px rgba(76, 175, 80, 0.4);
+    }
+    50% {
+        border-color: #66BB6A;
+        box-shadow: 
+            inset 0 0 50px rgba(76, 175, 80, 0.3),
+            0 0 50px rgba(76, 175, 80, 0.6);
+    }
+    100% {
+        border-color: #4CAF50;
+        box-shadow: 
+            inset 0 0 50px rgba(76, 175, 80, 0.2),
+            0 0 40px rgba(76, 175, 80, 0.4);
+    }
+}
+
+@keyframes dropHintFloat {
+    0%, 100% {
+        transform: translate(-50%, -50%) translateY(0px);
+    }
+    50% {
+        transform: translate(-50%, -50%) translateY(-5px);
+    }
+}
+
+@keyframes borderGlow {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes actionMarkerPulse {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes markerPulse {
+    0% {
+        width: 0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+    }
+    50% {
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+    100% {
+        width: 0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+    }
+}
+
+/* Novas animações para efeitos avançados */
+@keyframes dragRipple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+@keyframes dropImpact {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.8) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(4) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-40px) scale(1.3) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-80px) scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Animação para overlay de energia */
+@keyframes energyPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+    }
+}
+
+/* Animação para partículas de drag */
+@keyframes dragParticleFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-15px) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-30px) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Animações para ondas de energia dos marcadores */
+@keyframes energyWaveExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Animações para partículas dos marcadores */
+@keyframes markerParticleFloat1 {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-15px) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+@keyframes markerParticleFloat2 {
+    0%, 100% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateX(10px) rotate(-90deg);
+        opacity: 1;
+    }
+}
+
+@keyframes markerParticleFloat3 {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 0.7;
+    }
+    33% {
+        transform: translate(-8px, -8px) rotate(120deg) scale(1.2);
+        opacity: 1;
+    }
+    66% {
+        transform: translate(8px, -5px) rotate(240deg) scale(0.8);
+        opacity: 0.9;
+    }
+}
+
+/* Animação para emoji flutuante */
+@keyframes emojiFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(10deg);
+    }
+}
+
+/* Animações de entrada e saída dos marcadores */
+@keyframes markerEntrance {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(-90deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes markerExit {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+}
+
+@keyframes tooltipFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes tooltipFadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.8);
+    }
+}
+
+@keyframes buttonPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(255, 107, 53, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+    }
+}
+
+@keyframes actionSuccess {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    25% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    75% {
+        transform: scale(1.1) rotate(-5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes markerShine {
+    0% {
+        transform: translateX(-200%) translateY(-200%) rotate(45deg);
+    }
+    50% {
+        transform: translateX(200%) translateY(200%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(-200%) translateY(-200%) rotate(45deg);
+    }
+}
+
+/* Novas animações para o ghost aprimorado */
+@keyframes ghostFloat {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-8px) rotate(2deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.8;
+    }
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes emojiSpin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    25% {
+        transform: rotate(90deg) scale(1.1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1);
+    }
+    75% {
+        transform: rotate(270deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+/* Efeitos de hover melhorados com animações */
+[data-action]:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    animation: buttonPulse 2s infinite;
+}
+
+[data-action]:active {
+    transform: scale(0.98) rotate(1deg);
+}
+
+[data-action]:focus {
+    outline: 2px solid #FF6B35;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.2);
+}
+
+/* Efeito de sucesso após drop */
+.action-success {
+    animation: actionSuccess 0.8s ease-out;
+}
+
+/* Feedback visual para diferentes tipos de ação */
+[data-action="plant"]:hover {
+    border-color: #4CAF50;
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+[data-action="irrigate"]:hover {
+    border-color: #2196F3;
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+}
+
+[data-action="harvest"]:hover {
+    border-color: #FF9800;
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+}
+
+[data-action="upgrade"]:hover {
+    border-color: #9C27B0;
+    box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+}
+
+/* Efeitos de glow para diferentes ações */
+[data-action="plant"].dragging {
+    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.7);
+    border-color: #4CAF50;
+}
+
+[data-action="irrigate"].dragging {
+    box-shadow: 0 12px 35px rgba(33, 150, 243, 0.7);
+    border-color: #2196F3;
+}
+
+[data-action="harvest"].dragging {
+    box-shadow: 0 12px 35px rgba(255, 152, 0, 0.7);
+    border-color: #FF9800;
+}
+
+[data-action="upgrade"].dragging {
+    box-shadow: 0 12px 35px rgba(156, 39, 176, 0.7);
+    border-color: #9C27B0;
+}
+
+/* Responsividade para drag and drop */
+@media (max-width: 768px) {
+    #farm-map.drop-zone-active::before {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    
+    .action-marker-content {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+    
+    .drag-tooltip {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    #farm-map.drop-zone-active::before {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+    
+    .action-marker-content {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        border-width: 2px;
+    }
+}
+
+/* Estilos para seleção de área no mapa */
+.area-selection-hint {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 107, 53, 0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.area-selection-hint.show {
+    opacity: 1;
+}
+
+.area-selection-hint::before {
+    content: "🖱️";
+    margin-right: 8px;
+}
+
+/* Cursor personalizado para seleção */
+.leaflet-container.selecting {
     cursor: crosshair !important;
 }
 
-#farm-map.selecting * {
+.leaflet-container.selecting * {
     cursor: crosshair !important;
+}
+
+/* Animação para área selecionada */
+@keyframes selectedAreaPulse {
+    0% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.selected-area-animation {
+    animation: selectedAreaPulse 2s ease-in-out infinite;
+}
+
+/* Estilos para popup de área selecionada */
+.leaflet-popup-content {
+    margin: 8px 12px;
+    line-height: 1.4;
+}
+
+.area-popup-button {
+    margin-top: 8px !important;
+    padding: 4px 8px !important;
+    background: #FF6B35 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.area-popup-button:hover {
+    background: #E55A2B !important;
+}
+
+/* Indicador de coordenadas atualizado */
+.coordinates-updated {
+    animation: coordinatesHighlight 1s ease-out;
+}
+
+@keyframes coordinatesHighlight {
+    0% {
+        background-color: rgba(255, 107, 53, 0.2);
+        transform: scale(1.02);
+    }
+    100% {
+        background-color: transparent;
+        transform: scale(1);
+    }
+}
+
+/* Tooltip para instruções de seleção */
+.selection-tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.selection-tooltip.show {
+    opacity: 1;
+}
+
+/* Responsividade para elementos de seleção */
+@media (max-width: 768px) {
+    .area-selection-hint {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+    
+    .selection-tooltip {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .area-selection-hint {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        top: 5px;
+    }
+}
+
+/* Container de Notificações */
+#notifications-container {
+    max-width: 400px;
+    z-index: 9999;
+}
+
+/* Estilos para notificações individuais */
+#notifications-container > div {
+    min-width: 280px;
+    max-width: 400px;
+    word-wrap: break-word;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--tw-shadow-color);
+    border-width: 1px;
+    border-style: solid;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de brilho nas notificações */
+#notifications-container > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+#notifications-container > div:hover::before {
+    left: 100%;
+}
+
+/* Animações específicas para notificações */
+@keyframes notificationSlideIn {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes notificationSlideOut {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Efeitos de hover para botão de fechar */
+#notifications-container button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: scale(1.1);
+}
+
+/* Estilos específicos por tipo de notificação */
+#notifications-container .notification-success {
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.15), rgba(0, 255, 0, 0.05));
+    border-color: rgba(0, 255, 0, 0.4);
+    color: #00FF00;
+}
+
+#notifications-container .notification-error {
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(255, 140, 0, 0.05));
+    border-color: rgba(255, 140, 0, 0.4);
+    color: #FF8C00;
+}
+
+#notifications-container .notification-warning {
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(255, 140, 0, 0.05));
+    border-color: rgba(255, 140, 0, 0.4);
+    color: #FF8C00;
+}
+
+#notifications-container .notification-info {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 240, 255, 0.05));
+    border-color: rgba(0, 240, 255, 0.4);
+    color: #00F0FF;
+}
+
+/* Responsividade para notificações */
+@media (max-width: 768px) {
+    #notifications-container {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+    }
+    
+    #notifications-container > div {
+        min-width: auto;
+        max-width: none;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #notifications-container {
+        top: 0.5rem;
+        right: 0.5rem;
+        left: 0.5rem;
+    }
+    
+    #notifications-container > div {
+        padding: 0.75rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Animação de empilhamento para múltiplas notificações */
+#notifications-container > div:nth-child(n+4) {
+    opacity: 0.8;
+    transform: scale(0.95);
+}
+
+#notifications-container > div:nth-child(n+5) {
+    opacity: 0.6;
+    transform: scale(0.9);
+}
+
+/* Limite máximo de notificações visíveis */
+#notifications-container > div:nth-child(n+6) {
+    display: none;
+}
+
+/* ===== CHECKBOXES DE CAMADAS NASA (INLINE) ===== */
+
+.nasa-layers-inline {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 10px;
+    flex-wrap: wrap;
+}
+
+.nasa-layers-inline .layer-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    background: rgba(15, 15, 26, 0.8);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.nasa-layers-inline .layer-checkbox:hover {
+    background: rgba(0, 240, 255, 0.1);
+    border-color: rgba(0, 240, 255, 0.6);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+}
+
+.nasa-layers-inline input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 240, 255, 0.5);
+    border-radius: 3px;
+    background: rgba(15, 15, 26, 0.8);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nasa-layers-inline input[type="checkbox"]:hover {
+    border-color: rgba(0, 240, 255, 0.8);
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
+}
+
+.nasa-layers-inline input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.8), rgba(0, 240, 255, 0.6));
+    border-color: #00F0FF;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+
+.nasa-layers-inline input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    left: 1px;
+    color: #0F0F1A;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: none;
+}
+
+.nasa-layers-inline label {
+    font-size: 0.7rem;
+    color: rgba(224, 224, 255, 0.8);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    text-shadow: 0 0 3px rgba(0, 240, 255, 0.3);
+}
+
+.nasa-layers-inline .layer-checkbox:hover label {
+    color: rgba(224, 224, 255, 1);
+}
+
+/* Responsividade para checkboxes inline */
+@media (max-width: 768px) {
+    .nasa-layers-inline {
+        gap: 8px;
+        margin-left: 5px;
+    }
+    
+    .nasa-layers-inline .layer-checkbox {
+        padding: 3px 6px;
+    }
+    
+    .nasa-layers-inline input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .nasa-layers-inline label {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nasa-layers-inline {
+        gap: 5px;
+        margin-left: 3px;
+    }
+    
+    .nasa-layers-inline .layer-checkbox {
+        padding: 2px 4px;
+    }
+    
+    .nasa-layers-inline input[type="checkbox"] {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .nasa-layers-inline label {
+        font-size: 0.6rem;
+    }
 }

@@ -85,7 +85,6 @@
                 <button id="settings-btn" class="flex items-center justify-center rounded-full h-10 w-10 bg-panel-dark/50 border border-primary/30 text-primary shadow-glow shadow-primary/10 hover:bg-primary/20 transition-all duration-200">
                     <span class="material-symbols-outlined">settings</span>
                 </button>
-                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-primary/30 shadow-glow shadow-primary/10 bg-gradient-to-br from-primary/20 to-vibrant-green/20"></div>
             </div>
         </header>
 
@@ -99,19 +98,58 @@
                     <div class="absolute inset-4 flex flex-col">
                         <!-- Map Header -->
                         <div class="bg-panel-dark/90 backdrop-blur-sm border border-primary/30 rounded-t-lg p-4 shadow-glow shadow-primary/20">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <span class="material-symbols-outlined text-primary text-2xl glow-text shadow-primary">location_on</span>
-                                    <div>
-                                        <h2 class="text-lg font-bold text-primary glow-text shadow-primary">Localização da Propriedade</h2>
-                                        <p class="text-sm text-text-dark/80">Fazenda Demeter - Região do Cerrado</p>
+                            <!-- Farm Area Info -->
+                            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-vibrant-green/20">
+                                <div class="w-3 h-3 bg-vibrant-green rounded-full shadow-glow shadow-vibrant-green/50"></div>
+                                <div>
+                                    <h3 class="text-base font-bold text-vibrant-green glow-text shadow-vibrant-green">Área Cultivável</h3>
+                                    <div class="flex items-center gap-4 text-xs text-text-dark/80 mt-1">
+                                        <div>Área: <span class="text-primary font-medium">25 hectares</span></div>
+                                        <div>Coordenadas: <span class="text-primary font-medium" id="farm-coordinates-header">-15.7801, -47.9292</span></div>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-end">
                                 <div class="flex items-center gap-2">
                                     <div class="flex items-center gap-2 px-3 py-1 bg-panel-dark/50 rounded-md border border-vibrant-green/30">
                                         <div class="w-2 h-2 bg-vibrant-green rounded-full animate-pulse"></div>
                                         <span class="text-xs text-vibrant-green font-medium">Ativo</span>
                                     </div>
+                                    
+                                    <!-- Map Controls moved to header -->
+                                    <div class="flex items-center gap-1">
+                                        <button id="map-satellite" class="flex items-center justify-center w-8 h-8 rounded-md bg-panel-dark/50 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200" title="Vista Satélite">
+                                            <span class="material-symbols-outlined text-sm">satellite</span>
+                                        </button>
+                                        <button id="map-terrain" class="flex items-center justify-center w-8 h-8 rounded-md bg-panel-dark/50 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200" title="Vista Terreno">
+                                            <span class="material-symbols-outlined text-sm">terrain</span>
+                                        </button>
+                                        
+                                        <!-- Layers Icon with NASA Checkboxes -->
+                                        <div class="flex items-center gap-2">
+                                            <button id="map-layers" class="flex items-center justify-center w-8 h-8 rounded-md bg-panel-dark/50 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200" title="Camadas">
+                                                <span class="material-symbols-outlined text-sm">layers</span>
+                                            </button>
+                                            
+                                            <!-- NASA Layer Checkboxes -->
+                                            <div class="flex items-center gap-3 ml-2">
+                                                <label class="flex items-center gap-1 cursor-pointer" title="Umidade do Solo (SMAP)">
+                                                    <input type="checkbox" id="toggle-soil-moisture" class="w-3 h-3 rounded border border-primary/30 bg-background-dark text-primary focus:ring-1 focus:ring-primary">
+                                                    <span class="text-xs text-text-dark">Solo</span>
+                                                </label>
+                                                <label class="flex items-center gap-1 cursor-pointer" title="Índice de Vegetação (NDVI)">
+                                                    <input type="checkbox" id="toggle-vegetation" class="w-3 h-3 rounded border border-primary/30 bg-background-dark text-primary focus:ring-1 focus:ring-primary">
+                                                    <span class="text-xs text-text-dark">NDVI</span>
+                                                </label>
+                                                <label class="flex items-center gap-1 cursor-pointer" title="Precipitação (GPM)">
+                                                    <input type="checkbox" id="toggle-precipitation" class="w-3 h-3 rounded border border-primary/30 bg-background-dark text-primary focus:ring-1 focus:ring-primary">
+                                                    <span class="text-xs text-text-dark">Chuva</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <button id="farm-map-fullscreen" class="flex items-center justify-center w-8 h-8 rounded-md bg-panel-dark/50 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200">
                                         <span class="material-symbols-outlined text-sm">fullscreen</span>
                                     </button>
@@ -129,55 +167,18 @@
                                         <p class="text-primary text-sm">Carregando mapa da propriedade...</p>
                                     </div>
                                 </div>
+
+
                             </div>
                             
-                            <!-- Map Controls Overlay -->
-                            <div class="absolute top-4 right-4 flex flex-col gap-2 z-20">
-                                <button id="map-satellite" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10">
-                                    <span class="material-symbols-outlined text-sm">satellite</span>
-                                </button>
-                                <button id="map-terrain" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10">
-                                    <span class="material-symbols-outlined text-sm">terrain</span>
-                                </button>
-                                <button id="map-layers" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10">
-                                    <span class="material-symbols-outlined text-sm">layers</span>
-                                </button>
-                                <button id="select-location-btn" class="flex items-center justify-center w-10 h-10 rounded-lg bg-panel-dark/80 border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 backdrop-blur-sm shadow-glow shadow-primary/10" title="Selecionar localização manualmente">
-                                    <span class="material-symbols-outlined text-sm">my_location</span>
-                                </button>
-                            </div>
+
                             
-                            <!-- Farm Area Indicator -->
-                            <div class="absolute bottom-4 left-4 bg-panel-dark/90 backdrop-blur-sm border border-vibrant-green/30 rounded-lg p-3 shadow-glow shadow-vibrant-green/20 z-20">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <div class="w-3 h-3 bg-vibrant-green rounded-full shadow-glow shadow-vibrant-green/50"></div>
-                                    <span class="text-sm font-medium text-vibrant-green">Área Cultivável</span>
-                                </div>
-                                <div class="text-xs text-text-dark/80">
-                                    <div>Área: <span class="text-primary font-medium">25 hectares</span></div>
-                                    <div>Coordenadas: <span class="text-primary font-medium" id="farm-coordinates">-15.7801, -47.9292</span></div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
 
-                <!-- Zoom Controls -->
-                <div class="absolute bottom-4 left-4 flex flex-col gap-2 z-20">
-                    <button id="zoom-in" class="flex size-10 items-center justify-center rounded-lg bg-panel-dark/80 border border-primary/30 shadow-glow shadow-primary/10 backdrop-blur-sm text-primary hover:bg-primary/20 transition-all duration-200">
-                        <span class="material-symbols-outlined">add</span>
-                    </button>
-                    <button id="zoom-out" class="flex size-10 items-center justify-center rounded-lg bg-panel-dark/80 border border-primary/30 shadow-glow shadow-primary/10 backdrop-blur-sm text-primary hover:bg-primary/20 transition-all duration-200">
-                        <span class="material-symbols-outlined">remove</span>
-                    </button>
-                </div>
 
-                <!-- Data Dashboard Toggle -->
-                <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-20">
-                    <button id="data-toggle" class="flex size-10 items-center justify-center rounded-lg bg-panel-dark/80 border border-primary/30 shadow-glow shadow-primary/10 backdrop-blur-sm text-primary hover:bg-primary/20 transition-all duration-200">
-                        <span class="material-symbols-outlined">analytics</span>
-                    </button>
-                </div>
             </main>
 
             <!-- Right Sidebar -->
@@ -217,21 +218,44 @@
                         AÇÕES
                     </h2>
                     <div class="grid grid-cols-2 gap-3">
-                        <button id="plant-btn" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10">
+                        <button id="plant-btn" draggable="true" data-action="plant" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10 cursor-grab active:cursor-grabbing">
                             <span class="material-symbols-outlined text-2xl">eco</span>
                             <span class="text-sm font-medium">Plantar</span>
                         </button>
-                        <button id="irrigate-btn" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10">
+                        <button id="irrigate-btn" draggable="true" data-action="irrigate" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10 cursor-grab active:cursor-grabbing">
                             <span class="material-symbols-outlined text-2xl">water_drop</span>
                             <span class="text-sm font-medium">Irrigar</span>
                         </button>
-                        <button id="harvest-btn" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10">
+                        <button id="harvest-btn" draggable="true" data-action="harvest" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10 cursor-grab active:cursor-grabbing">
                             <span class="material-symbols-outlined text-2xl">agriculture</span>
                             <span class="text-sm font-medium">Colher</span>
                         </button>
-                        <button id="upgrades-btn" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10">
+                        <button id="upgrades-btn" draggable="true" data-action="upgrade" class="flex flex-col items-center gap-2 p-3 bg-panel-dark/50 rounded-lg border border-primary/30 text-primary hover:bg-primary/20 transition-all duration-200 shadow-glow shadow-primary/10 cursor-grab active:cursor-grabbing">
                             <span class="material-symbols-outlined text-2xl">trending_up</span>
                             <span class="text-sm font-medium">Upgrades</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Location Controls -->
+                <div class="p-4 border-b border-primary/20 location-controls">
+                    <h2 class="text-lg font-bold text-primary glow-text shadow-primary mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">location_on</span>
+                        LOCALIZAÇÃO
+                    </h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm text-text-dark mb-2">Selecionar Região</label>
+                            <select id="location-select" class="w-full bg-background-dark border border-primary/30 rounded-md px-3 py-2 text-text-dark focus:border-primary focus:ring-1 focus:ring-primary">
+                                <option value="brasilia">Brasília, DF</option>
+                                <option value="goiania">Goiânia, GO</option>
+                                <option value="cuiaba">Cuiabá, MT</option>
+                                <option value="palmas">Palmas, TO</option>
+                            </select>
+                        </div>
+                        <button id="update-data" class="w-full bg-primary/20 border border-primary text-primary rounded-md px-3 py-2 hover:bg-primary/30 transition-all duration-200 shadow-glow shadow-primary/20 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
+                            <span class="font-medium">Atualizar Dados</span>
                         </button>
                     </div>
                 </div>
@@ -248,180 +272,15 @@
                             Gráfico de umidade do solo
                         </div>
                     </div>
-                    <button id="open-data-dashboard" class="w-full flex items-center justify-center gap-2 p-3 bg-primary/20 rounded-lg border border-primary text-primary hover:bg-primary/30 transition-all duration-200 shadow-glow shadow-primary/20">
-                        <span class="material-symbols-outlined">open_in_new</span>
-                        <span class="font-medium">Abrir Dashboard Completo</span>
-                    </button>
+
                 </div>
             </aside>
         </div>
     </div>
 
-    <!-- NASA Data Dashboard Modal -->
-    <div id="data-dashboard" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden">
-        <div class="h-full overflow-y-auto">
-            <div class="min-h-full bg-background-dark">
-                <!-- Dashboard Header -->
-                <div class="sticky top-0 bg-panel-dark border-b border-primary/20 p-4 z-10">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-2xl font-bold text-primary glow-text shadow-primary flex items-center gap-3">
-                            <span class="material-symbols-outlined text-3xl">satellite</span>
-                            Dashboard de Dados NASA
-                        </h2>
-                        <button id="close-dashboard" class="flex items-center justify-center rounded-full h-10 w-10 bg-panel-dark/50 border border-primary/30 text-primary shadow-glow shadow-primary/10 hover:bg-primary/20 transition-all duration-200">
-                            <span class="material-symbols-outlined">close</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Dashboard Content -->
-                <div class="p-6">
-                    <!-- Data Filters -->
-                    <div class="mb-6 p-4 bg-panel-dark/50 rounded-lg border border-primary/20">
-                        <h3 class="text-lg font-medium text-primary mb-4">Filtros de Dados</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label class="block text-sm text-text-dark mb-2">Fonte de Dados</label>
-                                <select id="data-source" class="w-full bg-background-dark border border-primary/30 rounded-md px-3 py-2 text-text-dark focus:border-primary focus:ring-1 focus:ring-primary">
-                                    <option value="nasa">NASA GIBS (Real)</option>
-                                    <option value="simulated">Dados Simulados</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm text-text-dark mb-2">Camada de Dados</label>
-                                <select id="data-layer" class="w-full bg-background-dark border border-primary/30 rounded-md px-3 py-2 text-text-dark focus:border-primary focus:ring-1 focus:ring-primary">
-                                    <option value="soil-moisture">Umidade do Solo</option>
-                                    <option value="vegetation">Índice de Vegetação</option>
-                                    <option value="both">Ambos</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm text-text-dark mb-2">Localização</label>
-                                <select id="location-select" class="w-full bg-background-dark border border-primary/30 rounded-md px-3 py-2 text-text-dark focus:border-primary focus:ring-1 focus:ring-primary">
-                                    <option value="brasilia">Brasília, DF</option>
-                                    <option value="goiania">Goiânia, GO</option>
-                                    <option value="cuiaba">Cuiabá, MT</option>
-                                    <option value="palmas">Palmas, TO</option>
-                                </select>
-                            </div>
-                            <div class="flex items-end">
-                                <button id="update-data" class="w-full bg-primary/20 border border-primary text-primary rounded-md px-4 py-2 hover:bg-primary/30 transition-all duration-200 shadow-glow shadow-primary/20">
-                                    Atualizar Dados
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- NASA Integration Status -->
-                        <div class="mt-4 p-3 bg-background-dark/50 rounded-md border border-primary/30">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-primary">satellite</span>
-                                    <span class="text-sm text-text-dark">Status da Integração NASA:</span>
-                                </div>
-                                <div id="nasa-status" class="flex items-center gap-2">
-                                    <div class="w-2 h-2 bg-vibrant-green rounded-full animate-pulse"></div>
-                                    <span class="text-sm text-vibrant-green">Conectado</span>
-                                </div>
-                            </div>
-                            <div class="mt-2 text-xs text-text-dark/70">
-                                Dados de satélite em tempo real da NASA GIBS API
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Maps and Charts Grid -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Map Container -->
-                        <div class="bg-panel-dark/50 rounded-lg border border-primary/20 p-4">
-                            <h3 class="text-lg font-medium text-primary mb-4">Mapa de Dados</h3>
-                            <div id="map-container" class="h-64 bg-background-dark rounded border border-primary/10 relative">
-                                <div class="absolute inset-0 flex items-center justify-center text-text-dark/60">
-                                    Mapa de dados NASA
-                                </div>
-                            </div>
-                            <div class="mt-3 flex items-center gap-4 text-xs">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-3 h-3 bg-blue-500 rounded"></div>
-                                    <span class="text-text-dark">Baixa</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-3 h-3 bg-yellow-500 rounded"></div>
-                                    <span class="text-text-dark">Média</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-3 h-3 bg-red-500 rounded"></div>
-                                    <span class="text-text-dark">Alta</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Soil Moisture Chart -->
-                        <div class="bg-panel-dark/50 rounded-lg border border-primary/20 p-4">
-                            <h3 class="text-lg font-medium text-primary mb-4">Umidade do Solo</h3>
-                            <div id="soil-moisture-chart" class="h-64 bg-background-dark rounded border border-primary/10">
-                                <canvas id="soilMoistureChart"></canvas>
-                            </div>
-                            <div class="mt-3 text-sm text-text-dark">
-                                <div class="flex justify-between">
-                                    <span>Atual: <span id="current-soil-moisture" class="text-water-blue font-medium">45%</span></span>
-                                    <span>Tendência: <span id="soil-moisture-trend" class="text-vibrant-green font-medium">Estável</span></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Vegetation Chart -->
-                        <div class="bg-panel-dark/50 rounded-lg border border-primary/20 p-4">
-                            <h3 class="text-lg font-medium text-primary mb-4">Índice de Vegetação</h3>
-                            <div id="vegetation-chart" class="h-64 bg-background-dark rounded border border-primary/10">
-                                <canvas id="vegetationChart"></canvas>
-                            </div>
-                            <div class="mt-3 text-sm text-text-dark">
-                                <div class="flex justify-between">
-                                    <span>Atual: <span id="current-vegetation" class="text-vibrant-green font-medium">0.7</span></span>
-                                    <span>Tendência: <span id="vegetation-trend" class="text-vibrant-green font-medium">Crescendo</span></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Weather Forecast -->
-                        <div class="bg-panel-dark/50 rounded-lg border border-primary/20 p-4">
-                            <h3 class="text-lg font-medium text-primary mb-4">Previsão do Tempo</h3>
-                            <div id="weather-chart" class="h-64 bg-background-dark rounded border border-primary/10">
-                                <canvas id="weatherChart"></canvas>
-                            </div>
-                            <div class="mt-3 text-sm text-text-dark">
-                                <div class="flex justify-between">
-                                    <span>Condição: <span id="weather-condition" class="text-water-blue font-medium">Parcialmente nublado</span></span>
-                                    <span>Chuva: <span id="rain-chance" class="text-water-blue font-medium">30%</span></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Farm Impact Section -->
-                    <div class="mt-6 bg-panel-dark/50 rounded-lg border border-primary/20 p-4">
-                        <h3 class="text-lg font-medium text-primary mb-4">Impacto na Fazenda</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="text-center">
-                                <div class="text-2xl mb-2" id="weather-icon">🌤️</div>
-                                <div class="text-sm text-text-dark">Condições Climáticas</div>
-                                <div id="weather-status" class="text-primary font-medium">Favoráveis</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl mb-2">🌱</div>
-                                <div class="text-sm text-text-dark">Qualidade do Solo</div>
-                                <div id="soil-quality" class="text-vibrant-green font-medium">Boa</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl mb-2">💡</div>
-                                <div class="text-sm text-text-dark">Recomendação</div>
-                                <div id="recommendation" class="text-primary font-medium">Irrigar em 2 dias</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Container de Notificações -->
+    <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
+        <!-- As notificações serão inseridas aqui dinamicamente -->
     </div>
 
     <!-- Scripts -->
